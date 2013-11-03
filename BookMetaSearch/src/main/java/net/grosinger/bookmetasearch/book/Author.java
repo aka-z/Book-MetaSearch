@@ -17,8 +17,8 @@ public class Author {
 
     private List<Book> books;
 
-    private Author() {
-
+    private Author(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -57,17 +57,12 @@ public class Author {
     public static class AuthorBuilder {
         Author instance;
 
-        public AuthorBuilder() {
-            instance = new Author();
+        public AuthorBuilder(long id) {
+            instance = new Author(id);
         }
 
         public AuthorBuilder setName(String name) {
             instance.name = name;
-            return this;
-        }
-
-        public AuthorBuilder setId(long id) {
-            instance.id = id;
             return this;
         }
 

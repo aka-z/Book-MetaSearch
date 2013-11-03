@@ -15,7 +15,7 @@ import java.net.URL;
  */
 public class Book {
 
-    private BookType type;
+    private long id;
     private String title;
     private Author author;
     private long isbn;
@@ -29,12 +29,12 @@ public class Book {
 
     // TODO: Adapt to support multiple authors
 
-    private Book(BookType type) {
-        this.type = type;
+    private Book(long id) {
+        this.id = id;
     }
 
-    public BookType getType() {
-        return type;
+    public long getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -80,7 +80,7 @@ public class Book {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31)
-                .append(type).append(title).append(author).append(isbn).append(isbn13).append(publisher)
+                .append(id).append(title).append(author).append(isbn).append(isbn13).append(publisher)
                 .toHashCode();
     }
 
@@ -100,7 +100,7 @@ public class Book {
 
         Book rhs = (Book) obj;
         return new EqualsBuilder()
-                .append(type, rhs.type).append(title, rhs.title).append(author, rhs.author).append(isbn, rhs.isbn)
+                .append(id, rhs.id).append(title, rhs.title).append(author, rhs.author).append(isbn, rhs.isbn)
                 .append(isbn13, rhs.isbn13).append(publisher, rhs.publisher)
                 .isEquals();
     }
@@ -113,8 +113,8 @@ public class Book {
     public static class BookBuilder {
         private Book instance;
 
-        public BookBuilder(BookType type) {
-            instance = new Book(type);
+        public BookBuilder(long id) {
+            instance = new Book(id);
         }
 
         public BookBuilder setTitle(String title) {
