@@ -3,8 +3,8 @@ package net.grosinger.bookmetasearch.loader;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
-import net.grosinger.bookmetasearch.Result;
 import net.grosinger.bookmetasearch.book.Author;
 import net.grosinger.bookmetasearch.book.Book;
 import net.grosinger.bookmetasearch.book.BookType;
@@ -24,11 +24,15 @@ public class GoodreadsQuery extends Query {
 
     @Override
     public void setQuery(String query) {
+        Log.d(getClass().getSimpleName(), "Setting query: " + query);
+
         this.query = query;
     }
 
     @Override
-    public List<Result> loadInBackground() {
+    public List<Book> loadInBackground() {
+        Log.d(getClass().getSimpleName(), "Loading in background: " + query);
+
         if(query == null || query == "") {
             return null;
         }
@@ -41,10 +45,10 @@ public class GoodreadsQuery extends Query {
 
         // TODO: Stop faking this data
 
-        List<Result> results = new ArrayList<Result>();
+        List<Book> results = new ArrayList<Book>();
         Author rothfuss = new Author.AuthorBuilder().setName("Patrick Rothfuss").build();
-        results.add(new Book.BookBuilder(BookType.EBook).setAuthor(rothfuss).setTitle("The Name of the Wind").build());
-        results.add(new Book.BookBuilder(BookType.EBook).setAuthor(rothfuss).setTitle("The next one...").build());
+        results.add(new Book.BookBuilder(BookType.EBook).setAuthor(rothfuss).setTitle("The Name of the Wind").setAvgRating(3.5f).setLargeImg("http://d202m5krfqbpi5.cloudfront.net/books/1270352123m/186074.jpg").build());
+        results.add(new Book.BookBuilder(BookType.EBook).setAuthor(rothfuss).setTitle("The Wise Man's Fear").setAvgRating(2.24f).setLargeImg("http://d202m5krfqbpi5.cloudfront.net/books/1297311431m/1215032.jpg").build());
 
         return results;
     }

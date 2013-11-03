@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import net.grosinger.bookmetasearch.book.Book;
 import net.grosinger.bookmetasearch.fragment.HomeFragment;
 import net.grosinger.bookmetasearch.fragment.SearchResultsFragment;
 import net.grosinger.bookmetasearch.loader.GoodreadsQuery;
@@ -19,7 +20,7 @@ import net.grosinger.bookmetasearch.loader.Query;
 
 import java.util.List;
 
-public class Home extends Activity implements LoaderManager.LoaderCallbacks<List<Result>> {
+public class Home extends Activity implements LoaderManager.LoaderCallbacks<List<Book>> {
     SearchResultsFragment searchResultsFragment;
     boolean searchResultsVisible;
 
@@ -34,7 +35,7 @@ public class Home extends Activity implements LoaderManager.LoaderCallbacks<List
 
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.d(this.getClass().getSimpleName(), "Found ACTION_SEARCH intent, creating SearchResultsFragment");
+            Log.d(getClass().getSimpleName(), "Found ACTION_SEARCH intent, creating SearchResultsFragment");
 
             searchResultsFragment = new SearchResultsFragment();
             searchResultsVisible = true;
@@ -43,7 +44,7 @@ public class Home extends Activity implements LoaderManager.LoaderCallbacks<List
                     .add(R.id.container, searchResultsFragment)
                     .commit();
         } else if (savedInstanceState == null) {
-            Log.d(this.getClass().getSimpleName(), "No intent or saved instance, creating PlaceholderFragment");
+            Log.d(getClass().getSimpleName(), "No intent or saved instance, creating PlaceholderFragment");
             searchResultsVisible = false;
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new HomeFragment())
@@ -80,13 +81,13 @@ public class Home extends Activity implements LoaderManager.LoaderCallbacks<List
     }
 
     private void handleIntent(Intent intent) {
-        Log.d(this.getClass().getSimpleName(), "Handling intent");
+        Log.d(getClass().getSimpleName(), "Handling intent");
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.d(this.getClass().getSimpleName(), "Intent is ACTION_SEARCH");
+            Log.d(getClass().getSimpleName(), "Intent is ACTION_SEARCH");
 
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d(this.getClass().getSimpleName(), "Searching for " + query);
+            Log.d(getClass().getSimpleName(), "Searching for " + query);
 
             queryLoader.setQuery(query);
             queryLoader.forceLoad();
@@ -94,20 +95,20 @@ public class Home extends Activity implements LoaderManager.LoaderCallbacks<List
     }
 
     @Override
-    public Loader<List<Result>> onCreateLoader(int i, Bundle args) {
-        Log.v(this.getClass().getSimpleName(), "Creating Loader");
+    public Loader<List<Book>> onCreateLoader(int i, Bundle args) {
+        Log.v(getClass().getSimpleName(), "Creating Loader");
 
         queryLoader = new GoodreadsQuery(this);
         return queryLoader;
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Result>> loader, List<Result> results) {
+    public void onLoadFinished(Loader<List<Book>> loader, List<Book> results) {
         searchResultsFragment.setResults(results);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Result>> loader) {
+    public void onLoaderReset(Loader<List<Book>> loader) {
         queryLoader.setQuery(null);
     }
 }

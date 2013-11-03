@@ -1,29 +1,80 @@
 package net.grosinger.bookmetasearch.book;
 
-import net.grosinger.bookmetasearch.Result;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by tony on 11/2/13.
  */
-public class Book implements Result {
+public class Book {
 
     private BookType type;
     private String title;
     private Author author;
     private long isbn;
     private long isbn13;
-    private String large_img;
-    private String small_img;
+    private Bitmap large_img;
+    private Bitmap small_img;
     private String publisher;
-    private int avg_rating;
+    private float avg_rating;
     private String description;
     private int num_pages;
 
+    // TODO: Adapt to support multiple authors
+
     private Book(BookType type) {
         this.type = type;
+    }
+
+    public BookType getType() {
+        return type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public long getIsbn() {
+        return isbn;
+    }
+
+    public long getIsbn13() {
+        return isbn13;
+    }
+
+    public Bitmap getLarge_img() {
+        return large_img;
+    }
+
+    public Bitmap getSmall_img() {
+        return small_img;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public float getAvg_rating() {
+        return avg_rating;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getNum_pages() {
+        return num_pages;
     }
 
     @Override
@@ -87,12 +138,26 @@ public class Book implements Result {
         }
 
         public BookBuilder setLargeImg(String largeImg) {
-            instance.large_img = largeImg;
+            try {
+                URL url = new URL(largeImg);
+                instance.large_img = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return this;
         }
 
         public BookBuilder setSmallImg(String smallImg) {
-            instance.small_img = smallImg;
+            try {
+                URL url = new URL(smallImg);
+                instance.small_img = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return this;
         }
 
@@ -101,7 +166,7 @@ public class Book implements Result {
             return this;
         }
 
-        public BookBuilder setAvgRating(int avgRating) {
+        public BookBuilder setAvgRating(float avgRating) {
             instance.avg_rating = avgRating;
             return this;
         }

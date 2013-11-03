@@ -1,20 +1,18 @@
 package net.grosinger.bookmetasearch.fragment;
 
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import net.grosinger.bookmetasearch.R;
-import net.grosinger.bookmetasearch.Result;
+import net.grosinger.bookmetasearch.SearchResultAdapter;
+import net.grosinger.bookmetasearch.book.Book;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,7 +20,7 @@ import java.util.List;
  */
 public class SearchResultsFragment extends Fragment {
 
-    ArrayAdapter<Result> listAdapter;
+    private SearchResultAdapter listAdapter;
 
     private ListView resultsListView;
     private LinearLayout resultsLayout;
@@ -43,11 +41,13 @@ public class SearchResultsFragment extends Fragment {
         resultsListView = (ListView) getActivity().findViewById(R.id.listView_resultsList);
         resultsLayout = (LinearLayout) getActivity().findViewById(R.id.linearLayout_resultsLayout);
 
-        listAdapter = new ArrayAdapter<Result>(getActivity(), android.R.layout.simple_list_item_1);
+        listAdapter = new SearchResultAdapter(getActivity(), null);
         resultsListView.setAdapter(listAdapter);
     }
 
-    public void setResults(List<Result> results) {
+    public void setResults(List<Book> results) {
+        Log.d(getClass().getSimpleName(), "Setting new results");
+
         listAdapter.clear();
         listAdapter.addAll(results);
         listAdapter.notifyDataSetChanged();

@@ -1,7 +1,5 @@
 package net.grosinger.bookmetasearch.book;
 
-import net.grosinger.bookmetasearch.Result;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.List;
 /**
  * Created by tony on 11/2/13.
  */
-public class Author implements Result {
+public class Author {
     private String name;
     private long id;
     private int num_works;
@@ -21,6 +19,34 @@ public class Author implements Result {
 
     private Author() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public int getNum_works() {
+        return num_works;
+    }
+
+    public String getLarge_img() {
+        return large_img;
+    }
+
+    public String getSmall_img() {
+        return small_img;
+    }
+
+    public String getHometown() {
+        return hometown;
+    }
+
+    public List<Book> getBooks() {
+        return books;
     }
 
     @Override
@@ -62,6 +88,11 @@ public class Author implements Result {
 
         public AuthorBuilder setBooks(ArrayList<Book> books) {
             instance.books = Collections.unmodifiableList(books);
+            return this;
+        }
+
+        public AuthorBuilder setHometown(String hometown) {
+            instance.hometown = hometown;
             return this;
         }
 
