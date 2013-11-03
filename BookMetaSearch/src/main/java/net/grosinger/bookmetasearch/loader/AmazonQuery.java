@@ -5,7 +5,7 @@ import android.util.Log;
 import net.grosinger.bookmetasearch.ApiKeys;
 import net.grosinger.bookmetasearch.book.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
-import net.grosinger.bookmetasearch.dataprovider.AmazonProvider;
+import net.grosinger.bookmetasearch.dataprovider.MockAmazonProvider;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class AmazonQuery implements InventoryQuery {
             return null;
         }
 
-        AmazonProvider provider = new AmazonProvider(ApiKeys.AWS_ACCESS_KEY_ID, ApiKeys.AWS_SECRET_ACCESS_KEY, ApiKeys.AWS_ASSOCIATES_ID);
+        MockAmazonProvider provider = new MockAmazonProvider(ApiKeys.AWS_ACCESS_KEY_ID, ApiKeys.AWS_SECRET_ACCESS_KEY, ApiKeys.AWS_ASSOCIATES_ID);
         return provider.findInventory(target);
     }
 }

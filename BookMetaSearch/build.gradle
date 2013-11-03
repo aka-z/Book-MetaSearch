@@ -24,9 +24,4 @@ android {
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.1'
-    compile files('./libs/commons-codec-1.3.jar')
-    compile files('./libs/javax-xml-soap-1.6.0.jar')
-    compile files('./libs/jaxws-api.jar')
-    compile files('./libs/javax.xml.bind.jar')
-    compile files('./libs/javax.jws-1.0.jar')
 }

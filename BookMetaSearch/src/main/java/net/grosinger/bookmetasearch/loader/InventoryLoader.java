@@ -29,7 +29,7 @@ public class InventoryLoader extends AsyncTaskLoader<List<AvailableBook>> {
         for (InventoryQuery query : queries) {
             List<AvailableBook> part = query.load();
             if(part != null) {
-                Log.d(getClass().getSimpleName(), "Adding results");
+                Log.d(getClass().getSimpleName(), "Adding results: " + part.size());
                 results.addAll(part);
             }
         }
