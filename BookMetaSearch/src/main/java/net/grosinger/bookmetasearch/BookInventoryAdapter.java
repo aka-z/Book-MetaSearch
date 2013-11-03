@@ -7,32 +7,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
-import net.grosinger.bookmetasearch.book.Book;
+import net.grosinger.bookmetasearch.book.AvailableBook;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by tony on 11/2/13.
+ * Created by tony on 11/3/13.
  */
-public class SearchResultAdapter extends BaseAdapter {
-    private List<Book> results;
+public class BookInventoryAdapter extends BaseAdapter {
+    List<AvailableBook> results;
 
     private LayoutInflater mInflater;
 
-    public SearchResultAdapter(Context context, List<Book> results) {
-        if (results != null) {
-            this.results = results;
+    public BookInventoryAdapter(Context context, List<AvailableBook> results) {
+        if (results == null) {
+            this.results = new ArrayList<AvailableBook>();
         } else {
-            this.results = new ArrayList<Book>();
+            this.results = results;
         }
 
         Log.d(getClass().getSimpleName(), "Creating adapter with array size " + this.results.size());
 
         mInflater = LayoutInflater.from(context);
+
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SearchResultAdapter extends BaseAdapter {
         results = null;
     }
 
-    public void addAll(List<Book> results) {
+    public void addAll(List<AvailableBook> results) {
         Log.d(getClass().getSimpleName(), "Updating adapter results to size " + results.size());
         this.results = results;
     }
@@ -65,32 +65,31 @@ public class SearchResultAdapter extends BaseAdapter {
 
         ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.search_result_item, null);
+            convertView = mInflater.inflate(R.layout.inventory_item, null);
             holder = new ViewHolder();
-            holder.txtBookName = (TextView) convertView.findViewById(R.id.textView_bookName);
-            holder.txtAuthorName = (TextView) convertView.findViewById(R.id.textView_authorName);
-            holder.rating = (RatingBar) convertView.findViewById(R.id.ratingBar_bookRating);
-            holder.largeImg = (ImageView) convertView.findViewById(R.id.imageView_coverImg);
+            holder.imgType = (ImageView) convertView.findViewById(R.id.imageView_typeImg);
+            holder.txtPublisher = (TextView) convertView.findViewById(R.id.textView_publisher);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Book currentResult = results.get(position);
+        AvailableBook currentResult = results.get(position);
         Log.d(getClass().getSimpleName(), "Current book: " + currentResult);
-        holder.txtBookName.setText(currentResult.getTitle());
-        holder.txtAuthorName.setText(currentResult.getAuthor().getName());
-        holder.rating.setRating(currentResult.getAvg_rating());
-        holder.largeImg.setImageBitmap(currentResult.getLarge_img());
+
+        holder.txtPublisher.setText(currentResult.getBook().getPublisher());
+        if (currentResult.getFormat() == AvailableBook.Format.AUDIOBOOK) {
+            holder.imgType.setBackgroundResource(R.drawable.ic_audiobook);
+        } else {
+            holder.imgType.setBackgroundResource(R.drawable.ic_ebook);
+        }
 
         return convertView;
     }
 
     static class ViewHolder {
-        TextView txtBookName;
-        TextView txtAuthorName;
-        RatingBar rating;
-        ImageView largeImg;
+        TextView txtPublisher;
+        ImageView imgType;
     }
 }

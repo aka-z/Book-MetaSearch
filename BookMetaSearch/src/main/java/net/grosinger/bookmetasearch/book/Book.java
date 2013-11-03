@@ -2,6 +2,9 @@ package net.grosinger.bookmetasearch.book;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,7 +16,7 @@ import java.net.URL;
 /**
  * Created by tony on 11/2/13.
  */
-public class Book {
+public class Book implements Parcelable {
 
     private long id;
     private String title;
@@ -28,6 +31,54 @@ public class Book {
     private int num_pages;
 
     // TODO: Adapt to support multiple authors
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
+
+    private Book(Parcel parcel) {
+        Log.d(getClass().getSimpleName(), "Un-parceling book");
+
+        id = parcel.readLong();
+        title = parcel.readString();
+        author = parcel.readParcelable(Author.class.getClassLoader());
+        isbn = parcel.readLong();
+        isbn13 = parcel.readLong();
+        large_img = parcel.readParcelable(Bitmap.class.getClassLoader());
+        small_img = parcel.readParcelable(Bitmap.class.getClassLoader());
+        publisher = parcel.readString();
+        avg_rating = parcel.readFloat();
+        description = parcel.readString();
+        num_pages = parcel.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        Log.d(getClass().getSimpleName(), "Parceling book");
+
+        parcel.writeLong(id);
+        parcel.writeString(title);
+        parcel.writeParcelable(author, i);
+        parcel.writeLong(isbn);
+        parcel.writeLong(isbn13);
+        parcel.writeParcelable(large_img, i);
+        parcel.writeParcelable(small_img, i);
+        parcel.writeString(publisher);
+        parcel.writeFloat(avg_rating);
+        parcel.writeString(description);
+        parcel.writeInt(num_pages);
+    }
 
     private Book(long id) {
         this.id = id;

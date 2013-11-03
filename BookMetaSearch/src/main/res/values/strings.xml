@@ -7,4 +7,7 @@
     <string name="search_hint">Search title, author, or ISBN</string>
     <string name="loading_results">Searching...</string>
 
+    <string name="ebook_sources">Ebook Availability</string>
+    <string name="audiobook_sources">Audiobook Availability</string>
+
 </resources>

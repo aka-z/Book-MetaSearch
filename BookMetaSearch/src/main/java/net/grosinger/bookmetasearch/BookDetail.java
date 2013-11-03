@@ -1,41 +1,33 @@
 package net.grosinger.bookmetasearch;
 
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
-import net.grosinger.bookmetasearch.fragment.HomeFragment;
+import net.grosinger.bookmetasearch.book.Book;
+import net.grosinger.bookmetasearch.fragment.DetailFragment;
 
-public class Home extends Activity {
+public class BookDetail extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_detail);
+
+        Book book = getIntent().getParcelableExtra("book");
 
         if (savedInstanceState == null) {
-            Log.d(getClass().getSimpleName(), "No intent or saved instance, creating PlaceholderFragment");
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new HomeFragment())
+                    .add(R.id.container, new DetailFragment(book))
                     .commit();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
+        getMenuInflater().inflate(R.menu.book_detail, menu);
         return true;
     }
 
@@ -50,4 +42,5 @@ public class Home extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

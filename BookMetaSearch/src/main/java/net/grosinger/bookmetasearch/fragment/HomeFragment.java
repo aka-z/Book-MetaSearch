@@ -14,12 +14,12 @@ import net.grosinger.bookmetasearch.R;
  */
 public class HomeFragment extends Fragment {
     public HomeFragment() {
-        Log.d("Home.PlaceholderFragment", "Initialized");
+        Log.d(getClass().getSimpleName(), "Initialized");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("Home.PlaceholderFragment", "Creating View");
+        Log.d(getClass().getSimpleName(), "Creating View");
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         return rootView;

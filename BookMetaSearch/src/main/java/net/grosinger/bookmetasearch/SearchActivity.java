@@ -14,7 +14,7 @@ import android.widget.SearchView;
 import net.grosinger.bookmetasearch.book.Book;
 import net.grosinger.bookmetasearch.fragment.SearchResultsFragment;
 import net.grosinger.bookmetasearch.loader.GoodreadsQuery;
-import net.grosinger.bookmetasearch.loader.Query;
+import net.grosinger.bookmetasearch.loader.ProductLoader;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class SearchActivity extends Activity implements LoaderManager.LoaderCall
     SearchResultsFragment searchResultsFragment;
 
     String queryString;
-    Query queryLoader;
+    ProductLoader queryLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class SearchActivity extends Activity implements LoaderManager.LoaderCall
             queryString = intent.getStringExtra(SearchManager.QUERY);
             Log.d(getClass().getSimpleName(), "Searching for " + queryString);
 
-            queryLoader.setQuery(queryString);
+            queryLoader.setSearchTerm(queryString);
             queryLoader.forceLoad();
         }
     }
@@ -79,7 +79,8 @@ public class SearchActivity extends Activity implements LoaderManager.LoaderCall
     public Loader<List<Book>> onCreateLoader(int i, Bundle args) {
         Log.v(getClass().getSimpleName(), "Creating Loader");
 
-        queryLoader = new GoodreadsQuery(this);
+        queryLoader = new ProductLoader(this);
+        queryLoader.addProductQuery(new GoodreadsQuery());
         return queryLoader;
     }
 
@@ -90,6 +91,6 @@ public class SearchActivity extends Activity implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<List<Book>> loader) {
-        queryLoader.setQuery(null);
+        queryLoader.setSearchTerm(null);
     }
 }
