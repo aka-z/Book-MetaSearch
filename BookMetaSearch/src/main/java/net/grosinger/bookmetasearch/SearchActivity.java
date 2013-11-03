@@ -70,6 +70,9 @@ public class SearchActivity extends Activity implements LoaderManager.LoaderCall
             queryString = intent.getStringExtra(SearchManager.QUERY);
             Log.d(getClass().getSimpleName(), "Searching for " + queryString);
 
+            if(queryLoader == null) {
+                onCreateLoader(0, null);
+            }
             queryLoader.setSearchTerm(queryString);
             queryLoader.forceLoad();
         }

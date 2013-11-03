@@ -1,5 +1,6 @@
 package net.grosinger.bookmetasearch;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class BookDetail extends Activity {
             case R.id.action_settings:
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

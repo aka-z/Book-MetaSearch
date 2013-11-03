@@ -1,6 +1,8 @@
 package net.grosinger.bookmetasearch.fragment;
 
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;

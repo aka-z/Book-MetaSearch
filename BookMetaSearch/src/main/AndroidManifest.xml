@@ -33,7 +33,9 @@
         <!-- this is the searchable activity; it performs searches -->
         <activity
             android:name=".SearchActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
@@ -46,7 +48,8 @@
         </activity>
 
         <activity android:name=".BookDetail"
-                  android:label="Book MetaSearch">
+                  android:label="Book MetaSearch"
+                  android:parentActivityName=".SearchActivity">
         </activity>
     </application>
 
