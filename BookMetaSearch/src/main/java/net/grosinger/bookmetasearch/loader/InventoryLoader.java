@@ -2,6 +2,7 @@ package net.grosinger.bookmetasearch.loader;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 import net.grosinger.bookmetasearch.book.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
@@ -27,7 +28,10 @@ public class InventoryLoader extends AsyncTaskLoader<List<AvailableBook>> {
 
         for (InventoryQuery query : queries) {
             List<AvailableBook> part = query.load();
-            results.addAll(part);
+            if(part != null) {
+                Log.d(getClass().getSimpleName(), "Adding results");
+                results.addAll(part);
+            }
         }
 
         return results;

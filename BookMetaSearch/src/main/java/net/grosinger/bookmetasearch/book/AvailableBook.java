@@ -8,14 +8,16 @@ import java.security.InvalidParameterException;
 public class AvailableBook {
     private Book book;
     private Format format;
+    private String link;
 
-    public AvailableBook(Book book, Format format) {
+    public AvailableBook(Book book, Format format, String link) {
         if (book.getPublisher() == null || book.getPublisher() == "") {
             throw new InvalidParameterException("Publisher can not be empty");
         }
 
         this.book = book;
         this.format = format;
+        this.link = link;
     }
 
     public Book getBook() {
@@ -24,6 +26,10 @@ public class AvailableBook {
 
     public Format getFormat() {
         return format;
+    }
+
+    public String getLink() {
+        return link;
     }
 
     public static enum Format {

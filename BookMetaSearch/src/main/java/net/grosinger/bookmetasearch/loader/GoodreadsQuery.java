@@ -2,6 +2,7 @@ package net.grosinger.bookmetasearch.loader;
 
 import android.util.Log;
 
+import net.grosinger.bookmetasearch.ApiKeys;
 import net.grosinger.bookmetasearch.book.Book;
 import net.grosinger.bookmetasearch.dataprovider.GoodreadsProvider;
 
@@ -16,7 +17,6 @@ public class GoodreadsQuery implements ProductQuery {
     @Override
     public void setSearchTerms(String searchTerms) {
         Log.d(getClass().getSimpleName(), "Setting query: " + searchTerms);
-
         this.query = searchTerms;
     }
 
@@ -28,7 +28,7 @@ public class GoodreadsQuery implements ProductQuery {
             return null;
         }
 
-        GoodreadsProvider provider = new GoodreadsProvider("EJfEBt5xXWbOjoE0t78yUw", null);
+        GoodreadsProvider provider = new GoodreadsProvider(ApiKeys.GOODREADS_ACCESS_KEY, null);
         return provider.findBooks(query);
     }
 }

@@ -2,6 +2,7 @@ package net.grosinger.bookmetasearch.loader;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 import net.grosinger.bookmetasearch.book.Book;
 
@@ -26,7 +27,10 @@ public class ProductLoader extends AsyncTaskLoader<List<Book>> {
 
         for (ProductQuery query : queries) {
             List<Book> part = query.load();
-            results.addAll(part);
+            if(part != null) {
+                Log.d(getClass().getSimpleName(), "Adding results");
+                results.addAll(part);
+            }
         }
 
         return results;

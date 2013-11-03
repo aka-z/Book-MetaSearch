@@ -16,6 +16,7 @@ import net.grosinger.bookmetasearch.BookInventoryAdapter;
 import net.grosinger.bookmetasearch.R;
 import net.grosinger.bookmetasearch.book.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
+import net.grosinger.bookmetasearch.loader.AmazonQuery;
 import net.grosinger.bookmetasearch.loader.InventoryLoader;
 
 import java.util.ArrayList;
@@ -64,6 +65,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         ebookListView.setAdapter(ebookAdapter);
         audiobookListView.setAdapter(audiobookAdapter);
+
+        if(queryLoader == null) {
+            onCreateLoader(0, null);
+        }
+        queryLoader.setSearchTarget(book);
+        queryLoader.forceLoad();
     }
 
     @Override
@@ -71,6 +78,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Log.v(getClass().getSimpleName(), "Creating Loader");
 
         queryLoader = new InventoryLoader(getActivity());
+        queryLoader.addInventoryQuery(new AmazonQuery());
         return queryLoader;
     }
 
