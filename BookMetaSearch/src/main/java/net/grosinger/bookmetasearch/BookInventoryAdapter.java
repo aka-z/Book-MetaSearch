@@ -68,7 +68,7 @@ public class BookInventoryAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.inventory_item, null);
             holder = new ViewHolder();
             holder.imgType = (ImageView) convertView.findViewById(R.id.imageView_typeImg);
-            holder.txtPublisher = (TextView) convertView.findViewById(R.id.textView_publisher);
+            holder.txtProvider = (TextView) convertView.findViewById(R.id.textView_provider);
 
             convertView.setTag(holder);
         } else {
@@ -78,7 +78,7 @@ public class BookInventoryAdapter extends BaseAdapter {
         AvailableBook currentResult = results.get(position);
         Log.d(getClass().getSimpleName(), "Current book: " + currentResult);
 
-        holder.txtPublisher.setText(currentResult.getBook().getPublisher());
+        holder.txtProvider.setText(currentResult.getProvider());
         if (currentResult.getFormat() == AvailableBook.Format.AUDIOBOOK) {
             holder.imgType.setBackgroundResource(R.drawable.ic_audiobook);
         } else {
@@ -89,7 +89,7 @@ public class BookInventoryAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        TextView txtPublisher;
+        TextView txtProvider;
         ImageView imgType;
     }
 }

@@ -40,6 +40,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(getClass().getSimpleName(), "Creating View");
 
+        getLoaderManager().initLoader(0, null, this);
+
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 

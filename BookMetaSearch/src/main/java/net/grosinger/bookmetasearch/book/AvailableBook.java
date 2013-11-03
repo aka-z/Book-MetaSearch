@@ -9,15 +9,13 @@ public class AvailableBook {
     private Book book;
     private Format format;
     private String link;
+    private String provider;
 
-    public AvailableBook(Book book, Format format, String link) {
-        if (book.getPublisher() == null || book.getPublisher() == "") {
-            throw new InvalidParameterException("Publisher can not be empty");
-        }
-
+    public AvailableBook(Book book, Format format, String link, String provider) {
         this.book = book;
         this.format = format;
         this.link = link;
+        this.provider = provider;
     }
 
     public Book getBook() {
@@ -30,6 +28,10 @@ public class AvailableBook {
 
     public String getLink() {
         return link;
+    }
+
+    public String getProvider() {
+        return provider;
     }
 
     public static enum Format {

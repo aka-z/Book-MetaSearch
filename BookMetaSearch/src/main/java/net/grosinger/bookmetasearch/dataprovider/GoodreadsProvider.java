@@ -5,6 +5,7 @@ import android.util.Log;
 import net.grosinger.bookmetasearch.book.Author;
 import net.grosinger.bookmetasearch.book.Book;
 
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,6 +59,8 @@ public class GoodreadsProvider implements MetadataProvider {
                     String large_img = "";
                     float avg_rating = 0f;
                     long bookId = 0;
+                    String isbn = "";
+                    String isbn13 = "";
 
                     if (node.getNodeType() == Node.ELEMENT_NODE) {
                         Element workElement = (Element) node;
@@ -81,12 +84,34 @@ public class GoodreadsProvider implements MetadataProvider {
                         avg_rating = Float.parseFloat(ratingElement.getFirstChild().getNodeValue().trim());
                     }
 
+                    String url2 = BASE_URL + "book/show?key=" + apiKey + "&format=xml&id=" + bookId;
+                    Document response2 = performGetRequest(url2);
+                    if(response2 != null) {
+                        Element bookElement = (Element) response2.getDocumentElement().getElementsByTagName("book").item(0);
+                        Log.d(getClass().getSimpleName(), bookElement.getNodeName());
+
+
+                        CharacterData isbnElement = (CharacterData) bookElement.getElementsByTagName("isbn").item(0).getFirstChild();
+                        if(isbnElement != null) {
+                            isbn = isbnElement.getData();
+                        }
+
+                        CharacterData isbn13Element = (CharacterData) bookElement.getElementsByTagName("isbn13").item(0).getFirstChild();
+                        if(isbn13Element != null) {
+                            isbn13 = isbn13Element.getData();
+                        }
+                    }
+
                     Author author = new Author.AuthorBuilder(authorId).setName(authorName).build();
-                    Book book = new Book.BookBuilder(bookId).setTitle(title).setAvgRating(avg_rating).setLargeImg(large_img).setAuthor(author).build();
+                    Book book = new Book.BookBuilder(bookId).setTitle(title).setAvgRating(avg_rating).setLargeImg(large_img).setAuthor(author).setIsbn(isbn).setIsbn13(isbn13).build();
                     results.add(book);
 
                     Log.d(getClass().getSimpleName(), "Loaded book: " + book);
                 }
+
+
+
+
             } else {
                 Log.e(getClass().getSimpleName(), "Search failed");
             }

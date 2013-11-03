@@ -20,16 +20,18 @@ public class MockAmazonProvider implements AvailabilityProvider {
     public List<AvailableBook> findInventory(Book book) {
         Log.d(getClass().getSimpleName(), "Finding inventory");
 
+        Log.d(getClass().getSimpleName(), "ISBN: " + book.getIsbn() + ", ISBN13: " + book.getIsbn13());
+
         List<AvailableBook> books = new ArrayList<AvailableBook>();
 
-        if(book.getIsbn13() != 0) {
+        if(book.getIsbn13() != null && book.getIsbn13() != "") {
             Log.d(getClass().getSimpleName(), "Searching by ISBN13");
 
             // Mock receiving a result
-            books.add(new AvailableBook(book, AvailableBook.Format.EBOOK, "http://www.amazon.com/Name-Wind-Kingkiller-Chonicles-ebook/dp/B0010SKUYM"));
+            books.add(new AvailableBook(book, AvailableBook.Format.EBOOK, "http://www.amazon.com/Name-Wind-Kingkiller-Chonicles-ebook/dp/B0010SKUYM", "Amazon.com"));
         }
 
-        if(books.size() == 0 && book.getIsbn() != 0) {
+        if(books.size() == 0 && book.getIsbn() != null && book.getIsbn() != "") {
             Log.d(getClass().getSimpleName(), "Searching by ISBN");
 
             // This is where we would search if we didn't have the longer ISBN number

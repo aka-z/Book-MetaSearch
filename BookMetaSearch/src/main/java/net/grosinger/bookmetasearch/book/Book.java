@@ -18,11 +18,11 @@ import java.net.URL;
  */
 public class Book implements Parcelable {
 
-    private long id;
+    private long goodreadsId;
     private String title;
     private Author author;
-    private long isbn;
-    private long isbn13;
+    private String isbn;
+    private String isbn13;
     private Bitmap large_img;
     private Bitmap small_img;
     private String publisher;
@@ -50,11 +50,11 @@ public class Book implements Parcelable {
     private Book(Parcel parcel) {
         Log.d(getClass().getSimpleName(), "Un-parceling book");
 
-        id = parcel.readLong();
+        goodreadsId = parcel.readLong();
         title = parcel.readString();
         author = parcel.readParcelable(Author.class.getClassLoader());
-        isbn = parcel.readLong();
-        isbn13 = parcel.readLong();
+        isbn = parcel.readString();
+        isbn13 = parcel.readString();
         large_img = parcel.readParcelable(Bitmap.class.getClassLoader());
         small_img = parcel.readParcelable(Bitmap.class.getClassLoader());
         publisher = parcel.readString();
@@ -67,11 +67,11 @@ public class Book implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         Log.d(getClass().getSimpleName(), "Parceling book");
 
-        parcel.writeLong(id);
+        parcel.writeLong(goodreadsId);
         parcel.writeString(title);
         parcel.writeParcelable(author, i);
-        parcel.writeLong(isbn);
-        parcel.writeLong(isbn13);
+        parcel.writeString(isbn);
+        parcel.writeString(isbn13);
         parcel.writeParcelable(large_img, i);
         parcel.writeParcelable(small_img, i);
         parcel.writeString(publisher);
@@ -81,11 +81,11 @@ public class Book implements Parcelable {
     }
 
     private Book(long id) {
-        this.id = id;
+        this.goodreadsId = id;
     }
 
-    public long getId() {
-        return id;
+    public long getGoodreadsId() {
+        return goodreadsId;
     }
 
     public String getTitle() {
@@ -96,11 +96,11 @@ public class Book implements Parcelable {
         return author;
     }
 
-    public long getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public long getIsbn13() {
+    public String getIsbn13() {
         return isbn13;
     }
 
@@ -131,7 +131,7 @@ public class Book implements Parcelable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31)
-                .append(id).append(title).append(author).append(isbn).append(isbn13).append(publisher)
+                .append(goodreadsId).append(title).append(author).append(isbn).append(isbn13).append(publisher)
                 .toHashCode();
     }
 
@@ -151,7 +151,7 @@ public class Book implements Parcelable {
 
         Book rhs = (Book) obj;
         return new EqualsBuilder()
-                .append(id, rhs.id).append(title, rhs.title).append(author, rhs.author).append(isbn, rhs.isbn)
+                .append(goodreadsId, rhs.goodreadsId).append(title, rhs.title).append(author, rhs.author).append(isbn, rhs.isbn)
                 .append(isbn13, rhs.isbn13).append(publisher, rhs.publisher)
                 .isEquals();
     }
@@ -178,12 +178,12 @@ public class Book implements Parcelable {
             return this;
         }
 
-        public BookBuilder setIsbn(long isbn) {
+        public BookBuilder setIsbn(String isbn) {
             instance.isbn = isbn;
             return this;
         }
 
-        public BookBuilder setIsbn13(long isbn13) {
+        public BookBuilder setIsbn13(String isbn13) {
             instance.isbn13 = isbn13;
             return this;
         }
