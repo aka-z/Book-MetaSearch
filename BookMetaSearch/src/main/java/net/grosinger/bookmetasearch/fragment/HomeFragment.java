@@ -1,4 +1,4 @@
-package net.grosinger.bookmetasearch;
+package net.grosinger.bookmetasearch.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import net.grosinger.bookmetasearch.R;
 
 /**
  * Created by tony on 11/2/13.

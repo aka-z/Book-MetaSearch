@@ -1,38 +1,50 @@
 package net.grosinger.bookmetasearch;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.app.LoaderManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.SearchView;
 
-public class Home extends Activity {
+import net.grosinger.bookmetasearch.fragment.HomeFragment;
+import net.grosinger.bookmetasearch.fragment.SearchResultsFragment;
+import net.grosinger.bookmetasearch.loader.GoodreadsQuery;
+import net.grosinger.bookmetasearch.loader.Query;
+
+import java.util.List;
+
+public class Home extends Activity implements LoaderManager.LoaderCallbacks<List<Result>> {
+    SearchResultsFragment searchResultsFragment;
+    boolean searchResultsVisible;
+
+    Query queryLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Log.d("Home", "Creating");
+        getLoaderManager().initLoader(0, null, this);
 
         Intent intent = getIntent();
-        if(intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.d("Home", "Found ACTION_SEARCH intent, creating SearchResultsFragment");
+        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Log.d(this.getClass().getSimpleName(), "Found ACTION_SEARCH intent, creating SearchResultsFragment");
+
+            searchResultsFragment = new SearchResultsFragment();
+            searchResultsVisible = true;
+
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new SearchResultsFragment())
+                    .add(R.id.container, searchResultsFragment)
                     .commit();
         } else if (savedInstanceState == null) {
-            Log.d("Home", "No intent or saved instance, creating PlaceholderFragment");
+            Log.d(this.getClass().getSimpleName(), "No intent or saved instance, creating PlaceholderFragment");
+            searchResultsVisible = false;
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new HomeFragment())
                     .commit();
@@ -43,7 +55,7 @@ public class Home extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
 
@@ -51,8 +63,6 @@ public class Home extends Activity {
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
-
-        Log.d("Home", searchView.toString());
 
         return true;
     }
@@ -70,17 +80,34 @@ public class Home extends Activity {
     }
 
     private void handleIntent(Intent intent) {
-        Log.d("SearchResults", "Handling intent");
+        Log.d(this.getClass().getSimpleName(), "Handling intent");
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.d("SearchResults", "Intent is ACTION_SEARCH");
+            Log.d(this.getClass().getSimpleName(), "Intent is ACTION_SEARCH");
 
             String query = intent.getStringExtra(SearchManager.QUERY);
-            doMySearch(query);
+            Log.d(this.getClass().getSimpleName(), "Searching for " + query);
+
+            queryLoader.setQuery(query);
+            queryLoader.forceLoad();
         }
     }
 
-    private void doMySearch(String query) {
-        Log.d("Search", query);
+    @Override
+    public Loader<List<Result>> onCreateLoader(int i, Bundle args) {
+        Log.v(this.getClass().getSimpleName(), "Creating Loader");
+
+        queryLoader = new GoodreadsQuery(this);
+        return queryLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Result>> loader, List<Result> results) {
+        searchResultsFragment.setResults(results);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Result>> loader) {
+        queryLoader.setQuery(null);
     }
 }
