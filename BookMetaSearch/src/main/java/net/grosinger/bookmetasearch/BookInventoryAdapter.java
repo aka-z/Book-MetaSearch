@@ -1,6 +1,8 @@
 package net.grosinger.bookmetasearch;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +86,9 @@ public class BookInventoryAdapter extends BaseAdapter {
         } else {
             holder.imgType.setBackgroundResource(R.drawable.ic_ebook);
         }
+
+        holder.txtProvider.setText(Html.fromHtml("<a href='" + currentResult.getLink() + "'>" + currentResult.getProvider() + "</a>"));
+        holder.txtProvider.setMovementMethod(LinkMovementMethod.getInstance());
 
         return convertView;
     }
