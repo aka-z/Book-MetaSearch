@@ -20,38 +20,19 @@ import net.grosinger.bookmetasearch.loader.Query;
 
 import java.util.List;
 
-public class Home extends Activity implements LoaderManager.LoaderCallbacks<List<Book>> {
-    SearchResultsFragment searchResultsFragment;
-    boolean searchResultsVisible;
-
-    Query queryLoader;
+public class Home extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        getLoaderManager().initLoader(0, null, this);
-
-        Intent intent = getIntent();
-        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.d(getClass().getSimpleName(), "Found ACTION_SEARCH intent, creating SearchResultsFragment");
-
-            searchResultsFragment = new SearchResultsFragment();
-            searchResultsVisible = true;
-
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, searchResultsFragment)
-                    .commit();
-        } else if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Log.d(getClass().getSimpleName(), "No intent or saved instance, creating PlaceholderFragment");
-            searchResultsVisible = false;
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new HomeFragment())
                     .commit();
         }
-
-        handleIntent(getIntent());
     }
 
     @Override
@@ -63,7 +44,6 @@ public class Home extends Activity implements LoaderManager.LoaderCallbacks<List
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
 
         return true;
     }
@@ -78,37 +58,5 @@ public class Home extends Activity implements LoaderManager.LoaderCallbacks<List
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void handleIntent(Intent intent) {
-        Log.d(getClass().getSimpleName(), "Handling intent");
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.d(getClass().getSimpleName(), "Intent is ACTION_SEARCH");
-
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d(getClass().getSimpleName(), "Searching for " + query);
-
-            queryLoader.setQuery(query);
-            queryLoader.forceLoad();
-        }
-    }
-
-    @Override
-    public Loader<List<Book>> onCreateLoader(int i, Bundle args) {
-        Log.v(getClass().getSimpleName(), "Creating Loader");
-
-        queryLoader = new GoodreadsQuery(this);
-        return queryLoader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Book>> loader, List<Book> results) {
-        searchResultsFragment.setResults(results);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Book>> loader) {
-        queryLoader.setQuery(null);
     }
 }
