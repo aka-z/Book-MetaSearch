@@ -31,10 +31,7 @@ public class GoogleProvider implements MetadataProvider, AvailabilityProvider {
         try {
             searchTerm = URLEncoder.encode(searchTerm, "UTF-8");
             String url = "https://www.googleapis.com/books/v1/volumes?q=" + searchTerm;
-            JSONObject response = requestJson(url);
-            List<Book> parsedResponse = responseToBooks(response);
-            return parsedResponse;
-            //return responseToBooks(requestJson(url));
+            return responseToBooks(requestJson(url));
         } catch (UnsupportedEncodingException e) {
             Log.e(getClass().getSimpleName(), "Unable to URL encode search terms", e);
         }
@@ -65,58 +62,59 @@ public class GoogleProvider implements MetadataProvider, AvailabilityProvider {
 
     private List<Book> responseToBooks(JSONObject results) {
         List<Book> books = new ArrayList<Book>();
+        JSONArray items = null;
         try {
-            // TODO: Prevent one failed book from causing a return null
-            // TODO: Make this more robust so one missing attribute doesn't cause whole book to fail
-
-            JSONArray items = results.getJSONArray("items");
-            for (int i = 0; i < items.length(); i++) {
+            items = results.getJSONArray("items");
+        } catch (JSONException e) {
+            Log.e(getClass().getSimpleName(), "Could not retrieve items from json, aborting", e);
+        }
+        for (int i = 0; i < items.length(); i++) {
+            try {
                 JSONObject item = items.getJSONObject(i);
                 JSONObject volumeInfo = item.getJSONObject("volumeInfo");
 
-                String id = item.getString("id");
-                String title = volumeInfo.getString("title");
-                String author_name = volumeInfo.getJSONArray("authors").getString(0);
-                String publisher = volumeInfo.getString("publisher");
-                String large_img = volumeInfo.getJSONObject("imageLinks").getString("thumbnail");
-                String small_img = volumeInfo.getJSONObject("imageLinks").getString("smallThumbnail");
-                double ave_rating = volumeInfo.getDouble("averageRating");
-                String description = volumeInfo.getString("description");
-                int page_count = volumeInfo.getInt("pageCount");
+                Book.BookBuilder builder = new Book.BookBuilder(item.getString("id"), this);
+                builder.setTitle(volumeInfo.getString("title"));
 
-                String isbn = "";
-                String isbn13 = "";
+                String author_name = volumeInfo.getJSONArray("authors").getString(0);
+                Author author = new Author.AuthorBuilder(0).setName(author_name).build();
+                builder.setAuthor(author);
+
+                if(volumeInfo.has("publisher")) {
+                    builder.setPublisher(volumeInfo.getString("publisher"));
+                }
+                if(volumeInfo.has("imageLinks") && volumeInfo.getJSONObject("imageLinks").has("thumbnail")) {
+                    builder.setLargeImg(volumeInfo.getJSONObject("imageLinks").getString("thumbnail"));
+                }
+                if(volumeInfo.has("imageLinks") && volumeInfo.getJSONObject("imageLinks").has("smallThumbnail")) {
+                    builder.setSmallImg(volumeInfo.getJSONObject("imageLinks").getString("smallThumbnail"));
+                }
+                if(volumeInfo.has("averageRating")) {
+                    builder.setAvgRating(volumeInfo.getDouble("averageRating"));
+                }
+                if(volumeInfo.has("description")) {
+                    builder.setDescription(volumeInfo.getString("description"));
+                }
+                if(volumeInfo.has("pageCount")) {
+                    builder.setNumPages(volumeInfo.getInt("pageCount"));
+                }
+
                 JSONArray isbnNumbers = volumeInfo.getJSONArray("industryIdentifiers");
                 for (int j = 0; j < isbnNumbers.length(); j++) {
                     JSONObject isbnItem = isbnNumbers.getJSONObject(j);
                     if (isbnItem.getString("type").equals("ISBN_10")) {
-                        isbn = isbnItem.getString("identifier");
+                        builder.setIsbn(isbnItem.getString("identifier"));
                     } else {
-                        isbn13 = isbnItem.getString("identifier");
+                        builder.setIsbn13(isbnItem.getString("identifier"));
                     }
                 }
-
-                Author author = new Author.AuthorBuilder(0).setName(author_name).build();
-                Book book = new Book.BookBuilder(item.getString("id"), this)
-                        .setAuthor(author)
-                        .setAvgRating(ave_rating)
-                        .setDescription(description)
-                        .setIsbn(isbn)
-                        .setIsbn13(isbn13)
-                        .setLargeImg(large_img)
-                        .setSmallImg(small_img)
-                        .setTitle(title)
-                        .setNumPages(page_count)
-                        .setPublisher(publisher)
-                        .build();
-
-                books.add(book);
+                books.add(builder.build());
+            } catch (JSONException e) {
+                Log.e(getClass().getSimpleName(), "Invalid action on json, skipping book", e);
             }
-            return books;
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        return null;
+
+        return books;
     }
 
     private JSONObject requestJson(String url) {
