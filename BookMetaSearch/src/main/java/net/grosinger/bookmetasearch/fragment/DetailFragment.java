@@ -57,7 +57,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         title.setText(book.getTitle());
         author.setText(book.getAuthor().getName());
 
-        // TODO: Async-load book description
+        // TODO: Async-loadProducts book description
 
         ListView ebookListView = (ListView) getActivity().findViewById(R.id.listView_ebookSources);
         ListView audiobookListView = (ListView) getActivity().findViewById(R.id.listView_audiobookSources);

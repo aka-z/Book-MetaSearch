@@ -6,6 +6,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import net.grosinger.bookmetasearch.dataprovider.MetadataProvider;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -18,7 +20,9 @@ import java.net.URL;
  */
 public class Book implements Parcelable {
 
-    private long goodreadsId;
+    private String id;
+    private MetadataProvider provider;
+
     private String title;
     private Author author;
     private String isbn;
@@ -26,7 +30,7 @@ public class Book implements Parcelable {
     private Bitmap large_img;
     private Bitmap small_img;
     private String publisher;
-    private float avg_rating;
+    private double avg_rating;
     private String description;
     private int num_pages;
 
@@ -50,7 +54,7 @@ public class Book implements Parcelable {
     private Book(Parcel parcel) {
         Log.d(getClass().getSimpleName(), "Un-parceling book");
 
-        goodreadsId = parcel.readLong();
+        id = parcel.readString();
         title = parcel.readString();
         author = parcel.readParcelable(Author.class.getClassLoader());
         isbn = parcel.readString();
@@ -58,7 +62,7 @@ public class Book implements Parcelable {
         large_img = parcel.readParcelable(Bitmap.class.getClassLoader());
         small_img = parcel.readParcelable(Bitmap.class.getClassLoader());
         publisher = parcel.readString();
-        avg_rating = parcel.readFloat();
+        avg_rating = parcel.readDouble();
         description = parcel.readString();
         num_pages = parcel.readInt();
     }
@@ -67,7 +71,9 @@ public class Book implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         Log.d(getClass().getSimpleName(), "Parceling book");
 
-        parcel.writeLong(goodreadsId);
+        // TODO: Add provider to parcel
+
+        parcel.writeString(id);
         parcel.writeString(title);
         parcel.writeParcelable(author, i);
         parcel.writeString(isbn);
@@ -75,17 +81,22 @@ public class Book implements Parcelable {
         parcel.writeParcelable(large_img, i);
         parcel.writeParcelable(small_img, i);
         parcel.writeString(publisher);
-        parcel.writeFloat(avg_rating);
+        parcel.writeDouble(avg_rating);
         parcel.writeString(description);
         parcel.writeInt(num_pages);
     }
 
-    private Book(long id) {
-        this.goodreadsId = id;
+    private Book(String id, MetadataProvider provider) {
+        this.id = id;
+        this.provider = provider;
     }
 
-    public long getGoodreadsId() {
-        return goodreadsId;
+    public String getId() {
+        return id;
+    }
+
+    public MetadataProvider getProvider() {
+        return provider;
     }
 
     public String getTitle() {
@@ -116,7 +127,7 @@ public class Book implements Parcelable {
         return publisher;
     }
 
-    public float getAvg_rating() {
+    public double getAvg_rating() {
         return avg_rating;
     }
 
@@ -131,7 +142,7 @@ public class Book implements Parcelable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31)
-                .append(goodreadsId).append(title).append(author).append(isbn).append(isbn13).append(publisher)
+                .append(id).append(title).append(author).append(isbn).append(isbn13).append(publisher)
                 .toHashCode();
     }
 
@@ -151,7 +162,7 @@ public class Book implements Parcelable {
 
         Book rhs = (Book) obj;
         return new EqualsBuilder()
-                .append(goodreadsId, rhs.goodreadsId).append(title, rhs.title).append(author, rhs.author).append(isbn, rhs.isbn)
+                .append(id, rhs.id).append(title, rhs.title).append(author, rhs.author).append(isbn, rhs.isbn)
                 .append(isbn13, rhs.isbn13).append(publisher, rhs.publisher)
                 .isEquals();
     }
@@ -164,8 +175,8 @@ public class Book implements Parcelable {
     public static class BookBuilder {
         private Book instance;
 
-        public BookBuilder(long id) {
-            instance = new Book(id);
+        public BookBuilder(String id, MetadataProvider provider) {
+            instance = new Book(id, provider);
         }
 
         public BookBuilder setTitle(String title) {
@@ -217,7 +228,7 @@ public class Book implements Parcelable {
             return this;
         }
 
-        public BookBuilder setAvgRating(float avgRating) {
+        public BookBuilder setAvgRating(double avgRating) {
             instance.avg_rating = avgRating;
             return this;
         }

@@ -12,5 +12,5 @@ public interface InventoryQuery {
 
     public void setSearchTarget(Book book);
 
-    public List<AvailableBook> load();
+    public List<AvailableBook> loadInventory();
 }

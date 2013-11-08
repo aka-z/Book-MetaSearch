@@ -21,7 +21,7 @@ public class GoodreadsQuery implements ProductQuery {
     }
 
     @Override
-    public List<Book> load() {
+    public List<Book> loadProducts() {
         Log.d(getClass().getSimpleName(), "Loading in background: " + query);
 
         if (query == null || query == "") {

@@ -24,4 +24,6 @@ android {
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.1'
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.google.apis:google-api-services-books:v1-rev41-1.17.0-rc'
 }

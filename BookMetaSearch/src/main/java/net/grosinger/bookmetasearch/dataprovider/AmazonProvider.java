@@ -27,6 +27,7 @@ public class AmazonProvider implements AvailabilityProvider {
         gson = new Gson();
     }
 
+    @Override
     public List<AvailableBook> findInventory(Book book) {
         Log.d(getClass().getSimpleName(), "Finding inventory");
 

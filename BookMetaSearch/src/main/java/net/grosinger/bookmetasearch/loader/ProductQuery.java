@@ -11,5 +11,5 @@ public interface ProductQuery {
 
     public void setSearchTerms(String searchTerms);
 
-    public List<Book> load();
+    public List<Book> loadProducts();
 }

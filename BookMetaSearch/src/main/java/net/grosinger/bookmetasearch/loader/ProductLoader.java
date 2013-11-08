@@ -26,7 +26,7 @@ public class ProductLoader extends AsyncTaskLoader<List<Book>> {
         List<Book> results = new ArrayList<Book>();
 
         for (ProductQuery query : queries) {
-            List<Book> part = query.load();
+            List<Book> part = query.loadProducts();
             if(part != null) {
                 Log.d(getClass().getSimpleName(), "Adding results");
                 results.addAll(part);

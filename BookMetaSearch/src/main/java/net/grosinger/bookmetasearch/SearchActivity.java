@@ -13,7 +13,7 @@ import android.widget.SearchView;
 
 import net.grosinger.bookmetasearch.book.Book;
 import net.grosinger.bookmetasearch.fragment.SearchResultsFragment;
-import net.grosinger.bookmetasearch.loader.GoodreadsQuery;
+import net.grosinger.bookmetasearch.loader.GoogleQuery;
 import net.grosinger.bookmetasearch.loader.ProductLoader;
 
 import java.util.List;
@@ -83,7 +83,7 @@ public class SearchActivity extends Activity implements LoaderManager.LoaderCall
         Log.v(getClass().getSimpleName(), "Creating Loader");
 
         queryLoader = new ProductLoader(this);
-        queryLoader.addProductQuery(new GoodreadsQuery());
+        queryLoader.addProductQuery(new GoogleQuery());
         return queryLoader;
     }
 

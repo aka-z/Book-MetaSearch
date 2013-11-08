@@ -58,7 +58,7 @@ public class GoodreadsProvider implements MetadataProvider {
                     String title = "";
                     String large_img = "";
                     float avg_rating = 0f;
-                    long bookId = 0;
+                    String bookId = "";
                     String isbn = "";
                     String isbn13 = "";
 
@@ -75,7 +75,7 @@ public class GoodreadsProvider implements MetadataProvider {
                         large_img = imageElement.getFirstChild().getNodeValue().trim();
 
                         Element bookIdElement = (Element) workElement.getElementsByTagName("id").item(1);
-                        bookId = Long.parseLong(bookIdElement.getFirstChild().getNodeValue().trim());
+                        bookId = bookIdElement.getFirstChild().getNodeValue().trim();
 
                         Element authorIdElement = (Element) workElement.getElementsByTagName("id").item(2);
                         authorId = Long.parseLong(bookIdElement.getFirstChild().getNodeValue().trim());
@@ -103,7 +103,7 @@ public class GoodreadsProvider implements MetadataProvider {
                     }
 
                     Author author = new Author.AuthorBuilder(authorId).setName(authorName).build();
-                    Book book = new Book.BookBuilder(bookId).setTitle(title).setAvgRating(avg_rating).setLargeImg(large_img).setAuthor(author).setIsbn(isbn).setIsbn13(isbn13).build();
+                    Book book = new Book.BookBuilder(bookId, this).setTitle(title).setAvgRating(avg_rating).setLargeImg(large_img).setAuthor(author).setIsbn(isbn).setIsbn13(isbn13).build();
                     results.add(book);
 
                     Log.d(getClass().getSimpleName(), "Loaded book: " + book);
