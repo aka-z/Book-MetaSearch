@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import net.grosinger.bookmetasearch.dataprovider.MetadataProvider;
+import net.grosinger.bookmetasearch.loader.ProductQuery;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -21,7 +21,7 @@ import java.net.URL;
 public class Book implements Parcelable {
 
     private String id;
-    private MetadataProvider provider;
+    private ProductQuery provider;
 
     private String title;
     private Author author;
@@ -86,7 +86,7 @@ public class Book implements Parcelable {
         parcel.writeInt(num_pages);
     }
 
-    private Book(String id, MetadataProvider provider) {
+    private Book(String id, ProductQuery provider) {
         this.id = id;
         this.provider = provider;
     }
@@ -95,7 +95,7 @@ public class Book implements Parcelable {
         return id;
     }
 
-    public MetadataProvider getProvider() {
+    public ProductQuery getProvider() {
         return provider;
     }
 
@@ -175,7 +175,7 @@ public class Book implements Parcelable {
     public static class BookBuilder {
         private Book instance;
 
-        public BookBuilder(String id, MetadataProvider provider) {
+        public BookBuilder(String id, ProductQuery provider) {
             instance = new Book(id, provider);
         }
 
