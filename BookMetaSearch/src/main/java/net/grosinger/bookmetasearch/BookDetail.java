@@ -1,9 +1,7 @@
 package net.grosinger.bookmetasearch;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -44,5 +42,4 @@ public class BookDetail extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

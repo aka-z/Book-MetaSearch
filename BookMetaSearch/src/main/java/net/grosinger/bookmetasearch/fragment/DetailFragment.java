@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import net.grosinger.bookmetasearch.BookInventoryAdapter;
@@ -50,12 +51,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
 
         ImageView coverImg = (ImageView) getActivity().findViewById(R.id.imageView_coverImg);
-        TextView title = (TextView) getActivity().findViewById(R.id.textView_bookName);
-        TextView author = (TextView) getActivity().findViewById(R.id.textView_authorName);
+        TextView title = (TextView) getActivity().findViewById(R.id.textView_detailBookName);
+        TextView author = (TextView) getActivity().findViewById(R.id.textView_detailAuthorName);
+        TextView description = (TextView) getActivity().findViewById(R.id.textView_detailDescription);
+        RatingBar rating = (RatingBar) getActivity().findViewById(R.id.ratingBar_detailBookRating);
 
         coverImg.setImageBitmap(book.getLarge_img());
         title.setText(book.getTitle());
         author.setText(book.getAuthor().getName());
+        description.setText(book.getDescription());
+        rating.setRating((float) book.getAvg_rating());
 
         // TODO: Async-loadProducts book description
 
