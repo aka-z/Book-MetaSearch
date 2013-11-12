@@ -15,8 +15,9 @@ import android.widget.TextView;
 
 import net.grosinger.bookmetasearch.BookInventoryAdapter;
 import net.grosinger.bookmetasearch.R;
-import net.grosinger.bookmetasearch.book.AvailableBook;
+import net.grosinger.bookmetasearch.inventory.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
+import net.grosinger.bookmetasearch.inventory.InventoryListItem;
 import net.grosinger.bookmetasearch.loader.AmazonQuery;
 import net.grosinger.bookmetasearch.loader.InventoryLoader;
 
@@ -30,8 +31,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     Book book;
     InventoryLoader queryLoader;
 
-    BookInventoryAdapter ebookAdapter;
-    BookInventoryAdapter audiobookAdapter;
+    BookInventoryAdapter bookSourcesAdapter;
 
     public DetailFragment(Book book) {
         this.book = book;
@@ -64,14 +64,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // TODO: Async-loadProducts book description
 
-        ListView ebookListView = (ListView) getActivity().findViewById(R.id.listView_ebookSources);
-        ListView audiobookListView = (ListView) getActivity().findViewById(R.id.listView_audiobookSources);
+        ListView bookSourcesListView = (ListView) getActivity().findViewById(R.id.listView_detailBookSources);
 
-        ebookAdapter = new BookInventoryAdapter(getActivity(), null);
-        audiobookAdapter = new BookInventoryAdapter(getActivity(), null);
-
-        ebookListView.setAdapter(ebookAdapter);
-        audiobookListView.setAdapter(audiobookAdapter);
+        bookSourcesAdapter = new BookInventoryAdapter(getActivity(), null, null);
+        bookSourcesListView.setAdapter(bookSourcesAdapter);
 
         if(queryLoader == null) {
             onCreateLoader(0, null);
@@ -92,8 +88,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<List<AvailableBook>> loader, List<AvailableBook> results) {
         Log.d(getClass().getSimpleName(), "Sorting results by type");
-        List<AvailableBook> ebooks = new ArrayList<AvailableBook>();
-        List<AvailableBook> audiobooks = new ArrayList<AvailableBook>();
+        List<InventoryListItem> ebooks = new ArrayList<InventoryListItem>();
+        List<InventoryListItem> audiobooks = new ArrayList<InventoryListItem>();
         for (AvailableBook book : results) {
             if (book.getFormat().equals(AvailableBook.Format.EBOOK)) {
                 ebooks.add(book);
@@ -103,13 +99,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
 
         Log.d(getClass().getSimpleName(), "Updating list adapters");
-        ebookAdapter.clear();
-        ebookAdapter.addAll(ebooks);
-        ebookAdapter.notifyDataSetChanged();
-
-        audiobookAdapter.clear();
-        audiobookAdapter.addAll(ebooks);
-        audiobookAdapter.notifyDataSetChanged();
+        bookSourcesAdapter.clear();
+        bookSourcesAdapter.addAll(ebooks, audiobooks);
+        bookSourcesAdapter.notifyDataSetChanged();
     }
 
     @Override

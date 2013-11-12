@@ -6,7 +6,7 @@ import com.ECS.client.jax.Item;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-import net.grosinger.bookmetasearch.book.AvailableBook;
+import net.grosinger.bookmetasearch.inventory.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
 
 import java.io.IOException;

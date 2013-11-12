@@ -3,7 +3,7 @@ package net.grosinger.bookmetasearch.loader;
 import android.util.Log;
 
 import net.grosinger.bookmetasearch.book.Author;
-import net.grosinger.bookmetasearch.book.AvailableBook;
+import net.grosinger.bookmetasearch.inventory.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
 
 import org.json.JSONArray;

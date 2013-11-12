@@ -1,58 +1,68 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".BookDetail$PlaceholderFragment">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <RelativeLayout
         android:layout_height="wrap_content"
-        android:id="@+id/imageView_coverImg"
-        android:contentDescription="Book cover image"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:minWidth="40dp"
-        android:maxWidth="60dp"
-        android:minHeight="50dp"
-        android:maxHeight="75dp"
-        android:layout_marginLeft="2dp"/>
+        android:layout_width="wrap_content">
 
-    <TextView
-        android:id="@+id/textView_detailBookName"
-        android:text="Book Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="65dp"
-        android:layout_alignTop="@+id/imageView_coverImg" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView_coverImg"
+            android:contentDescription="Book cover image"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:minWidth="40dp"
+            android:maxWidth="60dp"
+            android:minHeight="50dp"
+            android:maxHeight="75dp"
+            android:layout_marginLeft="2dp"/>
 
-    <TextView
-        android:id="@+id/textView_detailAuthorName"
-        android:text="Author Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_detailBookName"
-        android:layout_marginLeft="65dp" />
+        <TextView
+            android:id="@+id/textView_detailBookName"
+            android:text="Book Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="65dp"
+            android:layout_alignTop="@+id/imageView_coverImg"
+            android:layout_alignLeft="@+id/imageView_coverImg"/>
 
-    <RatingBar
-        android:id="@+id/ratingBar_detailBookRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_detailAuthorName"
-        android:layout_marginLeft="65dp"
-        style="@style/searchResultsRatingBar"/>
+        <TextView
+            android:id="@+id/textView_detailAuthorName"
+            android:text="Author Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_detailBookName"
+            android:layout_marginLeft="65dp"
+            android:layout_alignLeft="@+id/imageView_coverImg"/>
+
+        <RatingBar
+            android:id="@+id/ratingBar_detailBookRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_detailAuthorName"
+            android:layout_marginLeft="65dp"
+            style="@style/searchResultsRatingBar"
+            android:layout_alignLeft="@+id/imageView_coverImg"/>
+    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView_detailBookDescription"
         android:layout_height="100dp"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/ratingBar_detailBookRating">
+        android:layout_width="fill_parent">
 
         <TextView
             android:id="@+id/textView_detailDescription"
@@ -66,61 +76,12 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_below="@+id/scrollView_detailBookDescription"/>
+        android:background="@android:color/darker_gray"/>
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <ListView
+        android:id="@+id/listView_detailBookSources"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
-        android:layout_below="@+id/scrollView_detailBookDescription">
-
-        <RelativeLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent">
-
-            <TextView
-                android:id="@+id/textView_ebook_sources"
-                android:text="@string/ebook_sources"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp" />
-
-            <!-- TODO: Convert into just one list with headers -->
-
-            <ListView
-                android:id="@+id/listView_ebookSources"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawSelectorOnTop="false"
-                android:layout_below="@+id/textView_ebook_sources"/>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_below="@+id/listView_ebookSources"/>
-
-            <TextView
-                android:id="@+id/textView_audiobook_sources"
-                android:text="@string/audiobook_sources"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/listView_ebookSources"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="65dp" />
-
-            <ListView
-                android:id="@+id/listView_audiobookSources"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawSelectorOnTop="false"
-                android:layout_below="@+id/textView_audiobook_sources"/>
-
-        </RelativeLayout>
-    </ScrollView>
-</RelativeLayout>
+        android:drawSelectorOnTop="false"/>
+</LinearLayout>

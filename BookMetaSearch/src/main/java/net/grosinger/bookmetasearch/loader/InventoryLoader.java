@@ -4,7 +4,7 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.util.Log;
 
-import net.grosinger.bookmetasearch.book.AvailableBook;
+import net.grosinger.bookmetasearch.inventory.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
 
 import java.util.ArrayList;

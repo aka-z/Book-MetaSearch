@@ -1,6 +1,6 @@
 package net.grosinger.bookmetasearch.loader;
 
-import net.grosinger.bookmetasearch.book.AvailableBook;
+import net.grosinger.bookmetasearch.inventory.AvailableBook;
 import net.grosinger.bookmetasearch.book.Book;
 
 import java.util.List;
