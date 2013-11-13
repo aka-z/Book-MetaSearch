@@ -22,16 +22,31 @@ import net.grosinger.bookmetasearch.loader.AmazonQuery;
 import net.grosinger.bookmetasearch.loader.InventoryLoader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by tony on 11/3/13.
+ * Show the cover image, book name, author, rating and description of
+ * book above a list of all sources where the book can be found.
+ *
+ * Provides handling of inventory loading and interacts with a
+ * custom ListView adapter to create custom headings
+ *
+ * @author Tony
+ * @since 11/3/2013
  */
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<AvailableBook>> {
     Book book;
     InventoryLoader queryLoader;
 
     BookInventoryAdapter bookSourcesAdapter;
+    AvailableBook[] currentSearchResults;
+
+    /**
+     * Default constructor for use during orientation changes
+     */
+    public DetailFragment() {
+    }
 
     public DetailFragment(Book book) {
         this.book = book;
@@ -43,6 +58,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         getLoaderManager().initLoader(0, null, this);
 
+        if(savedInstanceState != null) {
+            if (savedInstanceState.containsKey("book")) {
+                book = savedInstanceState.getParcelable("book");
+            }
+            if (savedInstanceState.containsKey("results")) {
+                currentSearchResults = (AvailableBook[]) savedInstanceState.getParcelableArray("results");
+            }
+        }
+
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
@@ -50,12 +74,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Log.d(getClass().getSimpleName(), "Creating activity");
+
+        // Get all the fields at the top of the screen
         ImageView coverImg = (ImageView) getActivity().findViewById(R.id.imageView_coverImg);
         TextView title = (TextView) getActivity().findViewById(R.id.textView_detailBookName);
         TextView author = (TextView) getActivity().findViewById(R.id.textView_detailAuthorName);
         TextView description = (TextView) getActivity().findViewById(R.id.textView_detailDescription);
         RatingBar rating = (RatingBar) getActivity().findViewById(R.id.ratingBar_detailBookRating);
 
+        // Populate fields at top of screen with book information
         coverImg.setImageBitmap(book.getLarge_img());
         title.setText(book.getTitle());
         author.setText(book.getAuthor().getName());
@@ -64,16 +92,29 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // TODO: Async-loadProducts book description
 
-        ListView bookSourcesListView = (ListView) getActivity().findViewById(R.id.listView_detailBookSources);
-
+        // Create the custom ListView adapter and set it on the list
         bookSourcesAdapter = new BookInventoryAdapter(getActivity(), null, null);
+        ListView bookSourcesListView = (ListView) getActivity().findViewById(R.id.listView_detailBookSources);
         bookSourcesListView.setAdapter(bookSourcesAdapter);
 
-        if(queryLoader == null) {
-            onCreateLoader(0, null);
+        // Initiate a load if we do not have saved data
+        if(currentSearchResults != null) {
+            onLoadFinished(null, Arrays.asList(currentSearchResults));
+        } else {
+            if(queryLoader == null) {
+                onCreateLoader(0, null);
+            }
+            queryLoader.setSearchTarget(book);
+            queryLoader.forceLoad();
         }
-        queryLoader.setSearchTarget(book);
-        queryLoader.forceLoad();
+    }
+
+    @Override
+    public void onSaveInstanceState (Bundle outState) {
+        Log.d(getClass().getSimpleName(), "Saving instance state");
+
+        outState.putParcelable("book", book);
+        outState.putParcelableArray("results", currentSearchResults);
     }
 
     @Override
@@ -87,6 +128,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<List<AvailableBook>> loader, List<AvailableBook> results) {
+        Log.d(getClass().getSimpleName(), "Finished loading, setting results");
+
+        // We need to save these results so we can parcel them if the orientation is changed
+        currentSearchResults = results.toArray(new AvailableBook[results.size()]);
+
         Log.d(getClass().getSimpleName(), "Sorting results by type");
         List<InventoryListItem> ebooks = new ArrayList<InventoryListItem>();
         List<InventoryListItem> audiobooks = new ArrayList<InventoryListItem>();
@@ -106,6 +152,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<List<AvailableBook>> loader) {
+        Log.d(getClass().getSimpleName(), "Resetting loader");
+
         queryLoader.setSearchTarget(null);
+        currentSearchResults = null;
     }
 }

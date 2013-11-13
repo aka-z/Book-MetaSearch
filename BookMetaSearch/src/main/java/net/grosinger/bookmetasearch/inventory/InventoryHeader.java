@@ -7,7 +7,11 @@ import android.widget.TextView;
 import net.grosinger.bookmetasearch.R;
 
 /**
- * Created by Tony on 11/11/13.
+ * A very simple InventoyListItem which displays a header
+ * item such as "Ebook Availability" or "Audiobook Availability"
+ *
+ * @author Tony
+ * @since 11/3/2013
  */
 public class InventoryHeader implements InventoryListItem {
     private String value;
@@ -26,6 +30,8 @@ public class InventoryHeader implements InventoryListItem {
         if(textView != null) {
             textView.setText(this.value);
         }
+
+        view.setClickable(false);
         return view;
     }
 }

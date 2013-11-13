@@ -1,7 +1,10 @@
 package net.grosinger.bookmetasearch.inventory;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,19 +14,57 @@ import net.grosinger.bookmetasearch.R;
 import net.grosinger.bookmetasearch.book.Book;
 
 /**
- * Created by tony on 11/3/13.
+ * Store information about a specific inventory item.
+ * Contains a url for this item, who is providing it, and the book itself.
+ *
+ * @author Tony
+ * @since 11/3/2013
  */
-public class AvailableBook implements InventoryListItem {
+public class AvailableBook implements InventoryListItem, Parcelable {
     private Book book;
     private Format format;
     private String link;
     private String provider;
+
+    public static final Parcelable.Creator<AvailableBook> CREATOR = new Parcelable.Creator<AvailableBook>() {
+        public AvailableBook createFromParcel(Parcel in) {
+            return new AvailableBook(in);
+        }
+
+        public AvailableBook[] newArray(int size) {
+            return new AvailableBook[size];
+        }
+    };
+
+    private AvailableBook(Parcel parcel) {
+        Log.d(getClass().getSimpleName(), "Un-parceling AvailableBook");
+
+        book = parcel.readParcelable(Book.class.getClassLoader());
+        format = parcel.readParcelable(Format.class.getClassLoader());
+        link = parcel.readString();
+        provider = parcel.readString();
+    }
 
     public AvailableBook(Book book, Format format, String link, String provider) {
         this.book = book;
         this.format = format;
         this.link = link;
         this.provider = provider;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        Log.d(getClass().getSimpleName(), "Parceling AvailableBook");
+
+        parcel.writeParcelable(book, i);
+        parcel.writeParcelable(format, i);
+        parcel.writeString(link);
+        parcel.writeString(provider);
     }
 
     public Book getBook() {
@@ -44,34 +85,50 @@ public class AvailableBook implements InventoryListItem {
 
     @Override
     public View fillView(View view, LayoutInflater inflater) {
+        Log.d(getClass().getSimpleName(), "Creating and filling view for list item: " + provider + " - " + format);
         if (view == null) {
             view = inflater.inflate(R.layout.inventory_item, null);
         }
 
-        ViewHolder holder;
-        holder = new ViewHolder();
-        holder.imgType = (ImageView) view.findViewById(R.id.imageView_typeImg);
-        holder.txtProvider = (TextView) view.findViewById(R.id.textView_provider);
+        ImageView imgType = (ImageView) view.findViewById(R.id.imageView_typeImg);
+        TextView txtProvider = (TextView) view.findViewById(R.id.textView_provider);
 
-        holder.txtProvider.setText(getProvider());
+        txtProvider.setText(getProvider());
         if (getFormat() == AvailableBook.Format.AUDIOBOOK) {
-            holder.imgType.setBackgroundResource(R.drawable.ic_audiobook);
+            imgType.setBackgroundResource(R.drawable.ic_audiobook);
         } else {
-            holder.imgType.setBackgroundResource(R.drawable.ic_ebook);
+            imgType.setBackgroundResource(R.drawable.ic_ebook);
         }
 
-        holder.txtProvider.setText(Html.fromHtml("<a href='" + getLink() + "'>" + getProvider() + "</a>"));
-        holder.txtProvider.setMovementMethod(LinkMovementMethod.getInstance());
+        txtProvider.setText(Html.fromHtml("<a href='" + getLink() + "'>" + getProvider() + "</a>"));
+        txtProvider.setMovementMethod(LinkMovementMethod.getInstance());
 
         return view;
     }
 
-    static class ViewHolder {
-        TextView txtProvider;
-        ImageView imgType;
-    }
-
-    public static enum Format {
+    public static enum Format implements Parcelable {
         AUDIOBOOK, EBOOK;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel parcel, final int flags) {
+            parcel.writeInt(ordinal());
+        }
+
+        public static final Creator<Format> CREATOR = new Creator<Format>() {
+            @Override
+            public Format createFromParcel(final Parcel source) {
+                return Format.values()[source.readInt()];
+            }
+
+            @Override
+            public Format[] newArray(final int size) {
+                return new Format[size];
+            }
+        };
     }
 }
