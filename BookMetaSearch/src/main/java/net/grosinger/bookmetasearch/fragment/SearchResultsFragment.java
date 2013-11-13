@@ -1,8 +1,6 @@
 package net.grosinger.bookmetasearch.fragment;
 
 import android.app.Fragment;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,10 +16,16 @@ import net.grosinger.bookmetasearch.R;
 import net.grosinger.bookmetasearch.SearchResultAdapter;
 import net.grosinger.bookmetasearch.book.Book;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by tony on 11/2/13.
+ * Show a list of all search results using a custom
+ * ListView adapter. Exposes a setResults method for
+ * updating list.
+ *
+ * @author Tony
+ * @since 11/2/2013
  */
 public class SearchResultsFragment extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -47,10 +51,24 @@ public class SearchResultsFragment extends Fragment implements AdapterView.OnIte
         resultsListView = (ListView) getActivity().findViewById(R.id.listView_resultsList);
         resultsLayout = (LinearLayout) getActivity().findViewById(R.id.linearLayout_resultsLayout);
 
+        // Create the custom ListView adapter and set it on the list
         listAdapter = new SearchResultAdapter(getActivity(), null);
         resultsListView.setAdapter(listAdapter);
-
         resultsListView.setOnItemClickListener(this);
+
+        // Load saved data if there is any
+        if (savedInstanceState != null) {
+            Log.d(getClass().getSimpleName(), "Loading saved state");
+            Book[] results = (Book[]) savedInstanceState.getParcelableArray("results");
+            setResults(Arrays.asList(results));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState (Bundle outState) {
+        Log.d(getClass().getSimpleName(), "Saving instance state");
+
+        outState.putParcelableArray("results", searchResults.toArray(new Book[searchResults.size()]));
     }
 
     @Override

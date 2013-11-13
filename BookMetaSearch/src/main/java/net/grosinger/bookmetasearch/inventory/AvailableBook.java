@@ -1,9 +1,10 @@
 package net.grosinger.bookmetasearch.inventory;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,13 @@ import net.grosinger.bookmetasearch.book.Book;
  * @author Tony
  * @since 11/3/2013
  */
-public class AvailableBook implements InventoryListItem, Parcelable {
+public class AvailableBook implements InventoryListItem, View.OnClickListener, Parcelable {
     private Book book;
     private Format format;
     private String link;
     private String provider;
+
+    private volatile Activity activity;
 
     public static final Parcelable.Creator<AvailableBook> CREATOR = new Parcelable.Creator<AvailableBook>() {
         public AvailableBook createFromParcel(Parcel in) {
@@ -90,6 +93,9 @@ public class AvailableBook implements InventoryListItem, Parcelable {
             view = inflater.inflate(R.layout.inventory_item, null);
         }
 
+        // While we are using the inflater, also get the activity
+        activity = (Activity) inflater.getContext();
+
         ImageView imgType = (ImageView) view.findViewById(R.id.imageView_typeImg);
         TextView txtProvider = (TextView) view.findViewById(R.id.textView_provider);
 
@@ -100,10 +106,16 @@ public class AvailableBook implements InventoryListItem, Parcelable {
             imgType.setBackgroundResource(R.drawable.ic_ebook);
         }
 
-        txtProvider.setText(Html.fromHtml("<a href='" + getLink() + "'>" + getProvider() + "</a>"));
-        txtProvider.setMovementMethod(LinkMovementMethod.getInstance());
-
+        view.setOnClickListener(this);
         return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        Log.d(getClass().getSimpleName(), "InventoryItem clicked, launching link");
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(link));
+        activity.startActivity(i);
     }
 
     public static enum Format implements Parcelable {
