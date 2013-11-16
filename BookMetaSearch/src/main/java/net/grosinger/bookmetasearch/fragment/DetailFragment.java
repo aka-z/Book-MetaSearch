@@ -84,7 +84,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         RatingBar rating = (RatingBar) getActivity().findViewById(R.id.ratingBar_detailBookRating);
 
         // Populate fields at top of screen with book information
-        coverImg.setImageBitmap(book.getLarge_img());
+        book.getImageAsync(coverImg);
         title.setText(book.getTitle());
         author.setText(book.getAuthor().getName());
         description.setText(book.getDescription());

@@ -1,17 +1,12 @@
 package net.grosinger.bookmetasearch;
 
 import android.content.Context;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import net.grosinger.bookmetasearch.inventory.AvailableBook;
 import net.grosinger.bookmetasearch.inventory.InventoryHeader;
 import net.grosinger.bookmetasearch.inventory.InventoryListItem;
 
@@ -40,6 +35,7 @@ public class BookInventoryAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
+        // TODO: Find a way to load these lazily so we don't have to get every image right from the start
         return items.get(i);
     }
 
@@ -56,17 +52,17 @@ public class BookInventoryAdapter extends BaseAdapter {
     public void addAll(List<InventoryListItem> ebooks, List<InventoryListItem> audiobooks) {
         items = new ArrayList<InventoryListItem>();
 
-        if(ebooks != null && !ebooks.isEmpty()) {
+        if (ebooks != null && !ebooks.isEmpty()) {
             items.add(new InventoryHeader("Available Ebooks"));
             items.addAll(ebooks);
         }
 
-        if(audiobooks != null && !audiobooks.isEmpty()) {
+        if (audiobooks != null && !audiobooks.isEmpty()) {
             items.add(new InventoryHeader("Available Audiobooks"));
             items.addAll(audiobooks);
         }
 
-        if(items.isEmpty()) {
+        if (items.isEmpty()) {
             items.add(new InventoryHeader("No Availability"));
         }
 

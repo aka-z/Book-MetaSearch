@@ -1,22 +1,22 @@
 package net.grosinger.bookmetasearch.book;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.ImageView;
 
+import net.grosinger.bookmetasearch.loader.AsyncImageLoader;
 import net.grosinger.bookmetasearch.loader.ProductQuery;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
- * Created by tony on 11/2/13.
+ * Container object for a book and all required information.
+ *
+ * @author Tony
+ * @since 11/2/2013
  */
 public class Book implements Parcelable {
 
@@ -27,12 +27,15 @@ public class Book implements Parcelable {
     private Author author;
     private String isbn;
     private String isbn13;
-    private Bitmap large_img;
-    private Bitmap small_img;
     private String publisher;
     private double avg_rating;
     private String description;
     private int num_pages;
+
+    private Bitmap large_img;
+    private Bitmap small_img;
+    private String large_img_url;
+    private String small_img_url;
 
     // TODO: Adapt to support multiple authors
 
@@ -61,6 +64,8 @@ public class Book implements Parcelable {
         isbn13 = parcel.readString();
         large_img = parcel.readParcelable(Bitmap.class.getClassLoader());
         small_img = parcel.readParcelable(Bitmap.class.getClassLoader());
+        large_img_url = parcel.readString();
+        small_img_url = parcel.readString();
         publisher = parcel.readString();
         avg_rating = parcel.readDouble();
         description = parcel.readString();
@@ -80,6 +85,8 @@ public class Book implements Parcelable {
         parcel.writeString(isbn13);
         parcel.writeParcelable(large_img, i);
         parcel.writeParcelable(small_img, i);
+        parcel.writeString(large_img_url);
+        parcel.writeString(small_img_url);
         parcel.writeString(publisher);
         parcel.writeDouble(avg_rating);
         parcel.writeString(description);
@@ -115,12 +122,48 @@ public class Book implements Parcelable {
         return isbn13;
     }
 
-    public Bitmap getLarge_img() {
+    public Bitmap getLargeImg() {
         return large_img;
     }
 
-    public Bitmap getSmall_img() {
+    public Bitmap getSmallImg() {
         return small_img;
+    }
+
+    public void getLargeImgAsync(ImageView view) {
+        if(large_img != null) {
+            view.setImageBitmap(large_img);
+        } else {
+            AsyncImageLoader loader = new AsyncImageLoader(view, title);
+            loader.execute(large_img_url);
+        }
+    }
+
+    public void getSmallImgAsync(ImageView view) {
+        if (small_img != null) {
+            view.setImageBitmap(small_img);
+        } else {
+            AsyncImageLoader loader = new AsyncImageLoader(view, title);
+            loader.execute(small_img_url);
+        }
+    }
+
+    public void getImageAsync(ImageView view) {
+        if(large_img_url != null && !large_img_url.equals("")) {
+            getLargeImgAsync(view);
+        } else if (small_img_url != null && !small_img_url.equals("")) {
+            getSmallImgAsync(view);
+        } else {
+            Log.d(getClass().getSimpleName(), "No image URL available to load: " + title);
+        }
+    }
+
+    public String getLargeImgUrl() {
+        return large_img_url;
+    }
+
+    public String getSmallImgUrl() {
+        return small_img_url;
     }
 
     public String getPublisher() {
@@ -200,26 +243,12 @@ public class Book implements Parcelable {
         }
 
         public BookBuilder setLargeImg(String largeImg) {
-            try {
-                URL url = new URL(largeImg);
-                instance.large_img = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            instance.large_img_url = largeImg;
             return this;
         }
 
         public BookBuilder setSmallImg(String smallImg) {
-            try {
-                URL url = new URL(smallImg);
-                instance.small_img = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            instance.small_img_url = smallImg;
             return this;
         }
 

@@ -82,7 +82,8 @@ public class SearchResultAdapter extends BaseAdapter {
         holder.txtBookName.setText(currentResult.getTitle());
         holder.txtAuthorName.setText(currentResult.getAuthor().getName());
         holder.rating.setRating((float) currentResult.getAvg_rating());
-        holder.largeImg.setImageBitmap(currentResult.getLarge_img());
+
+        currentResult.getImageAsync(holder.largeImg);
 
         return convertView;
     }
