@@ -13,7 +13,7 @@ import android.widget.ListView;
 
 import net.grosinger.bookmetasearch.BookDetail;
 import net.grosinger.bookmetasearch.R;
-import net.grosinger.bookmetasearch.SearchResultAdapter;
+import net.grosinger.bookmetasearch.search.SearchResultAdapter;
 import net.grosinger.bookmetasearch.book.Book;
 
 import java.util.Arrays;

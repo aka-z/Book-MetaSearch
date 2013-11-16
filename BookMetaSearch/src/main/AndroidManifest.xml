@@ -51,6 +51,9 @@
                   android:label="Book MetaSearch"
                   android:parentActivityName=".SearchActivity">
         </activity>
+
+        <provider android:name=".search.RecentBookSearchSuggestionsProvider"
+            android:authorities="net.grosinger.bookmetasearch.search.RecentBookSearchSuggestionsProvider" />
     </application>
 
 </manifest>

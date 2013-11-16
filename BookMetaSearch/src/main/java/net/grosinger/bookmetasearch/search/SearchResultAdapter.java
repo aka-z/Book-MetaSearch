@@ -1,4 +1,4 @@
-package net.grosinger.bookmetasearch;
+package net.grosinger.bookmetasearch.search;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import net.grosinger.bookmetasearch.R;
 import net.grosinger.bookmetasearch.book.Book;
 
 import java.util.ArrayList;

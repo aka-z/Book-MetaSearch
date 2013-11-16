@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.SearchView;
@@ -15,6 +16,7 @@ import net.grosinger.bookmetasearch.book.Book;
 import net.grosinger.bookmetasearch.fragment.SearchResultsFragment;
 import net.grosinger.bookmetasearch.loader.GoogleQuery;
 import net.grosinger.bookmetasearch.loader.ProductLoader;
+import net.grosinger.bookmetasearch.search.RecentBookSearchSuggestionsProvider;
 
 import java.util.List;
 
@@ -69,6 +71,10 @@ public class SearchActivity extends Activity implements LoaderManager.LoaderCall
 
             queryString = intent.getStringExtra(SearchManager.QUERY);
             Log.d(getClass().getSimpleName(), "Searching for " + queryString);
+
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    RecentBookSearchSuggestionsProvider.AUTHORITY, RecentBookSearchSuggestionsProvider.MODE);
+            suggestions.saveRecentQuery(queryString, null);
 
             if(queryLoader == null) {
                 onCreateLoader(0, null);
